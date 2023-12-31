@@ -1,11 +1,6 @@
 # students/signals.py
 from datetime import timedelta
 
-import pandas as pd
-from io import BytesIO
-from django.core.files import File
-import os
-import openpyxl
 
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -14,7 +9,7 @@ from django.dispatch import receiver
 from .models import Application, Verification, Interview, SelectDonor, Student, ProjectionSheet, Program
 from django.utils.crypto import get_random_string
 from django.conf import settings
-from django.dispatch import Signal
+
 
 # Define a signal for projection sheet creation
 # projection_sheet_created = Signal()

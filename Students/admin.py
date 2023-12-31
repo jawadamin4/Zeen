@@ -1,14 +1,12 @@
 # admin.py in your Zeen app
 
 from django.contrib import admin
-from django.http import HttpResponse
-from django.shortcuts import render
+
 from django.urls import reverse, path
 from django.utils.html import format_html
-from django.utils.safestring import mark_safe
+
 from import_export.admin import ImportExportModelAdmin
-from openpyxl import Workbook, load_workbook
-# from .signals import create_projection_sheet
+
 
 from .models import Application, Degree, Verification, Interview, ProjectionSheet, SelectDonor, Student, Donor, Program
 from .views import projections_view
