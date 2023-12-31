@@ -31,7 +31,7 @@ def projections_view(request, id):
         'projections': projections,
     }
 
-    return render(request, 'students/student_projections.html', context)
+    return render(request, 'Students/student_projections.html', context)
 
 
 #
