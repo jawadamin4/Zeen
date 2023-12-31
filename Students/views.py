@@ -96,4 +96,4 @@ def update_projection(request, student_id, projection_id):
         'form': form,
         'student': student,
     }
-    return render(request, 'students/update_projection.html', context)
+    return render(request, 'Students/update_projection.html', context)
