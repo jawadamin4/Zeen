@@ -56,9 +56,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000", "http://localhost:5174", "http://localhost:5173"  # React development server
-    # Add other origins as needed
-]
+    "http://localhost:3000", "http://localhost:5174", "http://localhost:5173",
+    "https://zeen-production.up.railway.app",
+    # Add any other allowed origins
+]  # React development server
+# Add other origins as needed
+
 ROOT_URLCONF = 'Zeen.urls'
 
 TEMPLATES = [
@@ -160,3 +163,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SECURE_REFERRER_POLICY = "same-origin"
