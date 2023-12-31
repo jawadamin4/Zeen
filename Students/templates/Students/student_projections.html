@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Projection Sheets for {{ student.student_name }}</title>
+    <style>
+        /* Add your custom styles here */
+        .projections-table table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .projections-table th, .projections-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .projections-table th {
+            background-color: yellow;
+        }
+        h1
+
+    </style>
+</head>
+<body>
+    <div class="projections-table">
+        <h1>Projection Sheets for {{ student.student_name }}</h1>
+        <table>
+            <thead>
+                <tr>
+                    {% if projections.first.sponsor_name == "semesters" %}
+                    <th>Semester</th>
+                {% else %}
+                    <th>Month</th>
+
+                {% endif %}
+                    <th>Tuition Fee</th>
+                    <th>Other Fee</th>
+                    <th>Total Cost</th>
+                    <th>Sponsor Name</th>
+                    <th>Sponsorship Commitment (%)</th>
+                    <th>Fee Due Date</th>
+                    <th>Status (Paid/Unpaid)</th>
+                    <th>Payment Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for projection in projections %}
+                    <tr>
+                        <td>{{ projection.semester }}</td>
+                        <td>{{ projection.tuition_fee }}</td>
+                        <td>{{ projection.other_fee }}</td>
+                        <td>{{ projection.total_cost }}</td>
+                        <td>{{ projection.sponsor_name }}</td>
+                        <td>{{ projection.sponsorship_commitment }}</td>
+                        <td>{{ projection.fee_due_date }}</td>
+                        <td>{{ projection.status }}</td>
+                        <td>{{ projection.payment_date }}</td>
+                        <td>
+    {% if projection.id is not None %}
+        <button><a href="{% url 'update-projection' student_id=student.id projection_id=projection.id %}">Update</a></button>
+    {% else %}
+        No ID available for this projection
+    {% endif %}
+</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="additional-info">
+            <p>Total Contribution to date: {{ total_contribution }}</p>
+            <p>Overall Total Commitment: {{ overall_total_commitment }}</p>
+            <p>Balance Commitment: {{ balance_commitment }}</p>
+        </div>
+    </div>
+</body>
+</html>

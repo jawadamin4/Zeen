@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Welcome, {{ student.name }}!</h1>
+
+<!-- Display student details -->
+
+<h2>Degree Details:</h2>
+<ul>
+    {% for degree in degrees %}
+        <li>{{ degree.degree_name }} - {{ degree.status }} - {{ degree.institute_name }}</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'update_student_info' %}">Update Information</a>
+</body>
+</html>

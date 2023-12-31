@@ -1,0 +1,74 @@
+<!-- zeen_app/templates/zeen_app/student_detail.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ student.name }}'s Profile</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #007BFF;
+            text-align: center;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        li {
+            margin: 10px;
+        }
+
+        strong {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>{{ student.name }}'s Profile</h1>
+
+<!-- Display student details -->
+<p><strong>Father's Name:</strong> {{ student.fathers_name }}</p>
+<p><strong>Date of Birth:</strong> {{ student.date_of_birth }}</p>
+<p><strong>Gender:</strong> {{ student.gender }}</p>
+<p><strong>Country:</strong> {{ student.country }}</p>
+<p><strong>Province:</strong> {{ student.province }}</p>
+<p><strong>City:</strong> {{ student.city }}</p>
+<p><strong>Mobile Number:</strong> {{ student.mobile_number }}</p>
+<p><strong>Email:</strong> {{ student.email }}</p>
+<p><strong>Village:</strong> {{ student.village }}</p>
+<p><strong>Financial Need:</strong> {{ student.financial_need }}</p>
+<p><strong>Career Goals:</strong> {{ student.career_goals }}</p>
+
+<!-- Display degrees -->
+<h2>Degree Details:</h2>
+<ul>
+    {% for degree in degrees %}
+        <li><strong>Degree Name:</strong> {{ degree.degree_name }}</li>
+        <li><strong>Status:</strong> {{ degree.status }}</li>
+        <li><strong>Institute Name:</strong> {{ degree.institute_name }}</li>
+        <!-- Add other degree fields as needed -->
+    {% endfor %}
+</ul>
+
+</body>
+</html>

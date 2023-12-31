@@ -1,0 +1,74 @@
+<!-- zeen_app/templates/zeen_app/student_profile.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ student.name }}'s Profile</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #007BFF;
+            text-align: center;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        div {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            color: #fff;
+            background-color: #007BFF;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>{{ student.name }}'s Profile</h1>
+
+    <h2>Student Information</h2>
+    <div>
+        <p><strong>Name:</strong> {{ student.name }}</p>
+        <!-- Add other student details as needed -->
+    </div>
+
+    <h2>Educational Qualifications</h2>
+    {% for degree in degrees %}
+        <div>
+            <p><strong>Degree:</strong> {{ degree.degree_name }}</p>
+            <p><strong>Status:</strong> {{ degree.status }}</p>
+            <p><strong>Institute:</strong> {{ degree.institute_name }}</p>
+            <!-- Add other degree details as needed -->
+        </div>
+    {% endfor %}
+
+    <a href="{% url 'update_student_info' %}">Update Degree</a>
+
+</body>
+</html>

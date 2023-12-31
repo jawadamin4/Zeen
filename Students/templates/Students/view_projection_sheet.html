@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Projection Sheet</title>
+    <script>
+    function openProjectionSheet() {
+        var baseUrl = window.location.origin;
+        var url = baseUrl + '/view_projection_sheet/' + '{{ filename }}';
+
+        // Redirect to the Django view that displays the projection sheet
+        window.open(url, '_blank');
+    }
+
+</script>
+</head>
+<body>
+    <p>If the projection sheet does not open, click <a href="#" onclick="openProjectionSheet();">here</a>.</p>
+</body>
+
+</html>
