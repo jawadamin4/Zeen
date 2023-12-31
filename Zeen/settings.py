@@ -56,12 +56,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000", "http://localhost:5174", "http://localhost:5173",
-    "https://zeen-production.up.railway.app",
-    # Add any other allowed origins
+    "http://localhost:3000", "http://localhost:5174", "http://localhost:5173", "https://zeen-production.up.railway.app"
+
 ]  # React development server
 # Add other origins as needed
-
+CSRF_TRUSTED_ORIGINS = ['https://zeen-production.up.railway.app']
 ROOT_URLCONF = 'Zeen.urls'
 
 TEMPLATES = [
