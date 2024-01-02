@@ -209,4 +209,12 @@ class SelectDonorAdmin(admin.ModelAdmin):
 
 admin.site.register(SelectDonor, SelectDonorAdmin)
 admin.site.register(Program)
-admin.site.register(Donor)
+class DonorAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Donor information', {
+            'fields': ['donor_name','donor_cnic', 'donor_contact','donor_email','donor_country'],
+        })]
+    list_display = ('donor_cnic', 'donor_contact', 'donor_email', 'donor_country')
+
+
+admin.site.register(Donor, DonorAdmin)

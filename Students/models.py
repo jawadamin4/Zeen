@@ -19,7 +19,8 @@ class Program(models.Model):
 
 
 class Donor(models.Model):
-    donor_name = models.OneToOneField(User, on_delete=models.CASCADE)
+    donor_username = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    donor_name = models.CharField(max_length=30)
     donor_cnic = models.CharField(max_length=13)
     donor_contact = models.IntegerField()
     donor_email = models.EmailField()
@@ -28,7 +29,7 @@ class Donor(models.Model):
     # Add any additional fields for the donor profile
 
     def __str__(self):
-        return self.donor_name.username
+        return self.donor_name
 
 
 class Verification(models.Model):

@@ -1,12 +1,12 @@
 # students/signals.py
 from datetime import timedelta
 
-
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Application, Verification, Interview, SelectDonor, Student, ProjectionSheet, Program
+from .models import Application, Verification, Interview, SelectDonor, Student, ProjectionSheet, Program,Donor
 from django.utils.crypto import get_random_string
 from django.conf import settings
 
@@ -159,6 +159,23 @@ def interview_status_change(sender, instance, **kwargs):
         Interview.objects.filter(pk=instance.pk).update(status='pending')
         # Save the updated instance
 
+@receiver(post_save, sender=Donor)
+def create_user_and_link(sender, instance, created, **kwargs):
+    if created and not instance.donor_username:
+        # Create a new User instance with a random password
+        password = User.objects.make_random_password()
+        user = User.objects.create(username=instance.donor_cnic,email=instance.donor_email,first_name=instance.donor_name,
+                                   password=make_password(password))
+        instance.donor_username = user
+        instance.save()
+        subject = 'Welcome to ZEEN STUDENT SCHOLARSHIP PROJECT!'
+        message = f'You are selected as Donor in  ZEEN STUDENT SCHOLARSHIP PROJECT!\n\n'f'Your username: "{instance.donor_cnic}"\n'f'Your password: {password}\n\n' f'Please log in using your username & password. '
+
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = [instance.donor_email]
+
+        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+        print(f"Password for {user.username}: {password}")
 
 # @receiver(post_save, sender=Interview)
 # def create_forecast_entry(sender, instance, created, **kwargs):
