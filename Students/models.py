@@ -57,13 +57,13 @@ class Verification(models.Model):
 
 
 class Degree(models.Model):
-    STATUS=[
-        ('In Progress','In Progress'),
+    STATUS = [
+        ('In Progress', 'In Progress'),
         ('Completed', 'Completed')
     ]
     application = models.ForeignKey('Application', on_delete=models.CASCADE)
     degree_name = models.CharField(max_length=255)
-    status = models.CharField(max_length=100,choices=STATUS)
+    status = models.CharField(max_length=100, choices=STATUS)
     institute_name = models.CharField(max_length=255)
     grade = models.CharField(max_length=10)  # You can change this field type based on your needs
 
@@ -227,11 +227,11 @@ class Interview(models.Model):
 
 class SelectDonor(models.Model):
     application = models.ForeignKey(Application, on_delete=models.CASCADE)
-    Donor = models.ForeignKey(Donor, on_delete=models.CASCADE, null=True, blank=True)
-    selection_date = models.DateTimeField(auto_now_add=True)
+    donor = models.ForeignKey(Donor, on_delete=models.CASCADE, null=True, blank=True)
+    selection_date = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name_plural = '5:Select_Donor'
+        verbose_name_plural = '4:Select_Donor'
 
 
 class Student(models.Model):
@@ -240,7 +240,8 @@ class Student(models.Model):
         ('Female', 'Female'),
         ('Other', 'Other'),
     ]
-    username = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=False, unique=True)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=False, unique=True)
+    application = models.ForeignKey(Application, on_delete=models.SET_NULL, null=True, blank=False)
     student_name = models.CharField(max_length=255)
     father_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -256,7 +257,7 @@ class Student(models.Model):
     address = models.TextField()
 
     def __str__(self):
-        return f"{self.username.username}"
+        return f"{self.student_name}"
 
     class Meta:
         verbose_name = "Student"
@@ -264,6 +265,11 @@ class Student(models.Model):
 
 
 class ProjectionSheet(models.Model):
+    STATUS_CHOICES = [
+        ('Paid', 'Paid'),
+        ('Unpaid', 'Unpaid'),
+    ]
+
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     semester = models.PositiveIntegerField()
     tuition_fee = models.DecimalField(max_digits=10, decimal_places=0)
@@ -272,8 +278,30 @@ class ProjectionSheet(models.Model):
     sponsor_name = models.CharField(max_length=255)
     sponsorship_commitment = models.DecimalField(max_digits=5, decimal_places=0)
     fee_due_date = models.DateField()
-    status = models.CharField(max_length=10, choices=[('Paid', 'Paid'), ('Unpaid', 'Unpaid')], default='Unpaid')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Unpaid')
     payment_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return f"Projection Sheet - {self.student.username.username} - Semester {self.semester}"
+        return f"Projection Sheet - {self.student.user.username} - Semester {self.semester}"
+
+
+class Mentor(models.Model):
+    mentor_username = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    mentor_name = models.CharField(max_length=30)
+    mentor_cnic = models.CharField(max_length=13)
+    mentor_contact = models.IntegerField()
+    mentor_email = models.EmailField()
+    mentor_Expertise = models.CharField(max_length=30)
+    mentor_country = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.mentor_name
+
+
+class SelectMentor(models.Model):
+    student = models.OneToOneField(Student, on_delete=models.CASCADE)
+    mentor = models.ForeignKey(Mentor, on_delete=models.CASCADE, null=True, blank=True)
+    selection_date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = '6:Select_Mentor'

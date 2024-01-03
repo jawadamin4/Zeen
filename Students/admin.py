@@ -7,15 +7,16 @@ from django.utils.html import format_html
 
 from import_export.admin import ImportExportModelAdmin
 
-
-from .models import Application, Degree, Verification, Interview, ProjectionSheet, SelectDonor, Student, Donor, Program
+from .models import Application, Degree, Verification, Interview, ProjectionSheet, SelectDonor, Student, Donor, Program, \
+    Mentor, SelectMentor
 from .views import projections_view
 
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('username',
-                    'student_name', 'father_name', 'last_name', 'gender', 'date_of_birth', 'age', 'country', 'province',
+    list_display = ('user',
+                    'student_name', 'application', 'father_name', 'last_name', 'gender', 'date_of_birth', 'age',
+                    'country', 'province',
                     'city', 'mobile_no',
                     'email', 'village', 'address', 'view_projections_button')
 
@@ -203,18 +204,40 @@ admin.site.register(ProjectionSheet, ProjectionSheetAdmin)
 
 
 class SelectDonorAdmin(admin.ModelAdmin):
-    list_display = ('application', 'Donor', "selection_date")
+    list_display = ('application', 'donor', "selection_date")
     # search_fields = ('application__name', 'Donor__donor_name')  # Assuming you have a 'name' field in Application and 'donor_name' in Donor
 
 
 admin.site.register(SelectDonor, SelectDonorAdmin)
 admin.site.register(Program)
+
+
 class DonorAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Donor information', {
-            'fields': ['donor_name','donor_cnic', 'donor_contact','donor_email','donor_country'],
+            'fields': ['donor_name', 'donor_cnic', 'donor_contact', 'donor_email', 'donor_country'],
         })]
     list_display = ('donor_cnic', 'donor_contact', 'donor_email', 'donor_country')
 
 
 admin.site.register(Donor, DonorAdmin)
+
+
+class MentorAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Donor information', {
+            'fields': ['mentor_name', 'mentor_cnic', 'mentor_email', 'mentor_contact', 'mentor_Expertise',
+                       'mentor_country'],
+        })]
+    list_display = ('mentor_name', 'mentor_contact', 'mentor_country', 'mentor_email', 'mentor_Expertise')
+
+
+admin.site.register(Mentor, MentorAdmin)
+
+
+class SelectMentorAdmin(admin.ModelAdmin):
+    list_display = ('student', 'mentor', "selection_date")
+    # search_fields = ('application__name', 'Donor__donor_name')  # Assuming you have a 'name' field in Application and 'donor_name' in Donor
+
+
+admin.site.register(SelectMentor, SelectMentorAdmin)
