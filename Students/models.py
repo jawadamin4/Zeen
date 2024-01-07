@@ -94,19 +94,12 @@ class Application(models.Model):
         ('Other', 'Other'),
         # Add other levels as needed
     ]
-    EducationProgram_Choices = [
-        ('Primary School', 'Primary School'),
-        ('Secondary School', 'Secondary School'),
-        ('Intermediate', 'Intermediate'),
-        ('O levels ', 'O levels '),
-        ('A levels ', 'A levels '),
-        ('Metrics', 'Metrics'),
-        ('FSC', 'FSC'),
-        ('Bachelors Degree', 'Bachelors Degree'),
-        ('Masters', 'Masters'),
-        ('Diploma / Certificate', 'Diploma / Certificate'),
-        ('Other', 'Other'),
-
+    PROVINCE_CHOICES = [
+        ('Punjab', 'Punjab'),
+        ('Sindh', 'Sindh'),
+        ('Khyber Pakhtunkhwa', 'Khyber Pakhtunkhwa'),
+        ('Balochistan', 'Balochistan'),
+        ('Gilgit-Baltistan', 'Gilgit-Baltistan'),
     ]
 
     name = models.CharField(max_length=255)
@@ -115,8 +108,8 @@ class Application(models.Model):
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     date_of_birth = models.DateField()
     age = models.PositiveIntegerField(default=1)
-    country = models.CharField(max_length=255)
-    province = models.CharField(max_length=255)
+    country = models.CharField(max_length=255,default="Pakistan")
+    province = models.CharField(max_length=255,choices=PROVINCE_CHOICES)
     city = models.CharField(max_length=255)
     mobile_no = models.CharField(max_length=15)
     cnic_or_b_form = models.CharField(max_length=13)

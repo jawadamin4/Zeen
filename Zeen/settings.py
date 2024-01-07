@@ -91,7 +91,7 @@ EMAIL_HOST_PASSWORD = 'yvno rpkv hdjy tgiz'  # Replace with your email password
 JAZZMIN_SETTINGS = {
     "site_brand": "ZEEN",
     # "site_logo": "books/img/logo.png",
-    "welcome_sign": "Welcome to the Zeen Education scholarship project Admin",
+    "welcome_sign": "Welcome to the Zeen Education Sponsorship project Admin",
     "usermenu_links": [
         {"name": "Logout", "url": "admin:logout", "new_window": False},
         {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},

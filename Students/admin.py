@@ -101,7 +101,7 @@ class ApplicationAdmin(admin.ModelAdmin):
     list_display = ['name', 'status']
     list_filter = ('status',)
     search_fields = ('name', 'status')
-    readonly_fields = ['age', 'total_amount']
+    readonly_fields = ['age','country', 'total_amount']
 
 
 # Register your models and admin classes
