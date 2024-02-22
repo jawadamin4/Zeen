@@ -8,17 +8,15 @@ from django.utils.html import format_html
 from import_export.admin import ImportExportModelAdmin
 
 from .models import Application, Degree, Verification, Interview, ProjectionSheet, SelectDonor, Student, Donor, Program, \
-    Mentor, SelectMentor
+    Mentor, SelectMentor, Results, Documents, BankDetails
 from .views import projections_view
 
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('user',
-                    'student_name', 'application', 'father_name', 'last_name', 'gender', 'date_of_birth', 'age',
-                    'country', 'province',
-                    'city', 'mobile_no',
-                    'email', 'village', 'address', 'view_projections_button')
+    list_display = (
+                    'student_name','father_name', 'last_name', 'gender', 'view_projections_button')
+    readonly_fields = ['user']
 
     # actions = ['view_projections']
 
@@ -59,6 +57,7 @@ class VerificationInline(admin.TabularInline):
     model = Verification
     extra = 1
 
+admin.site.register(BankDetails)
 
 class ApplicationAdmin(admin.ModelAdmin):
     inlines = [DegreeInline]
@@ -67,7 +66,7 @@ class ApplicationAdmin(admin.ModelAdmin):
             'fields': ('status', 'verification_required'),
         }),
         ('Personal Information', {
-            'fields': ('name', 'father_name', 'last_name', 'date_of_birth', 'age', 'gender'),
+            'fields': ('student','name', 'father_name', 'last_name', 'date_of_birth', 'age', 'gender'),
         }),
         ('Contact Information', {
             'fields': ('mobile_no', 'cnic_or_b_form', 'email', 'country', 'province', 'city', 'village', 'address'),
@@ -80,9 +79,6 @@ class ApplicationAdmin(admin.ModelAdmin):
             'fields': (
                 'admission_fee_of_the_program', 'total_fee_of_the_program', 'account_expenses', 'living_expenses',
                 'food_and_necessities_expenses', 'transport_amount', 'other_amount'),
-        }),
-        ('Banking Details', {
-            'fields': ('account_title', 'bank_account_number', 'bank_name'),
         }),
         ('Household Information', {
             'fields': (
@@ -140,11 +136,13 @@ class InterviewAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Interview, InterviewAdmin)
+admin.site.register(Results)
+admin.site.register(Documents)
 
 
 class ProjectionSheetAdmin(ImportExportModelAdmin):
     list_display = ['student', 'semester', 'tuition_fee', 'other_fee', 'total_cost', 'sponsor_name',
-                    'sponsorship_commitment', 'fee_due_date', 'status', 'payment_date']
+                    'sponsorship_commitment', 'fee_due_date', 'status', 'payment_date',"challan","reciept"]
     list_filter = ['status', 'sponsorship_commitment']
 
     # def view_projection_sheet(self, obj):
@@ -204,7 +202,7 @@ admin.site.register(ProjectionSheet, ProjectionSheetAdmin)
 
 
 class SelectDonorAdmin(admin.ModelAdmin):
-    list_display = ('application', 'donor', "selection_date")
+    list_display = ('student', 'donor', "selection_date")
     # search_fields = ('application__name', 'Donor__donor_name')  # Assuming you have a 'name' field in Application and 'donor_name' in Donor
 
 

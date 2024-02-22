@@ -3,6 +3,7 @@ from datetime import date
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 
 class Program(models.Model):
@@ -33,7 +34,7 @@ class Donor(models.Model):
 
 
 class Verification(models.Model):
-    application = models.OneToOneField('Application', on_delete=models.CASCADE, unique=True)
+    application = models.OneToOneField('Application', on_delete=models.CASCADE, unique=True,related_name='verification')
     verifier_name = models.CharField(max_length=255)
     verifier_email = models.EmailField()
     verifier_contact = models.CharField(max_length=15)
@@ -61,7 +62,7 @@ class Degree(models.Model):
         ('In Progress', 'In Progress'),
         ('Completed', 'Completed')
     ]
-    application = models.ForeignKey('Application', on_delete=models.CASCADE)
+    application = models.ForeignKey('Application', on_delete=models.CASCADE, related_name="degree")
     degree_name = models.CharField(max_length=255)
     status = models.CharField(max_length=100, choices=STATUS)
     institute_name = models.CharField(max_length=255)
@@ -74,6 +75,39 @@ class Degree(models.Model):
         verbose_name_plural = 'Degrees'
 
 
+class Student(models.Model):
+    GENDER_CHOICES = [
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+        ('Other', 'Other'),
+    ]
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=False, unique=True)
+    student_name = models.CharField(max_length=255)
+    father_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
+
+    USERNAME_FIELD = 'email'
+
+    def __str__(self):
+        return f"{self.student_name}"
+
+    class Meta:
+        verbose_name = "Student"
+        verbose_name_plural = "Students"
+
+
+class BankDetails(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, blank=False,related_name='bankdetails')
+    account_title = models.CharField(max_length=255, null=True, blank=True)
+    IBAN_number = models.CharField(max_length=20, null=True, blank=True)
+    bank_name = models.CharField(max_length=255, null=True, blank=True)
+    branch_address = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.account_title}"
+
 class Application(models.Model):
     GENDER_CHOICES = [
         ('Male', 'Male'),
@@ -84,8 +118,8 @@ class Application(models.Model):
         ('Primary School', 'Primary School'),
         ('Secondary School', 'Secondary School'),
         ('Intermediate', 'Intermediate'),
-        ('O levels ', 'O levels '),
-        ('A levels ', 'A levels '),
+        ('O levels', 'O levels'),
+        ('A levels', 'A levels'),
         ('Metrics', 'Metrics'),
         ('FSC', 'FSC'),
         ('Bachelors Degree', 'Bachelors Degree'),
@@ -101,15 +135,15 @@ class Application(models.Model):
         ('Balochistan', 'Balochistan'),
         ('Gilgit-Baltistan', 'Gilgit-Baltistan'),
     ]
-
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='applications')
     name = models.CharField(max_length=255)
     father_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     date_of_birth = models.DateField()
     age = models.PositiveIntegerField(default=1)
-    country = models.CharField(max_length=255,default="Pakistan")
-    province = models.CharField(max_length=255,choices=PROVINCE_CHOICES)
+    country = models.CharField(max_length=255, default="Pakistan")
+    province = models.CharField(max_length=255, choices=PROVINCE_CHOICES)
     city = models.CharField(max_length=255)
     mobile_no = models.CharField(max_length=15)
     cnic_or_b_form = models.CharField(max_length=13)
@@ -117,7 +151,8 @@ class Application(models.Model):
     village = models.CharField(max_length=255)
     address = models.TextField()
     current_level_of_education = models.CharField(max_length=255, choices=LEVEL_CHOICES)
-    program_interested_in = models.ForeignKey(Program, on_delete=models.CASCADE, blank=True, null=True)
+    program_interested_in = models.ForeignKey(Program, on_delete=models.CASCADE, blank=True, null=True,
+                                              related_name='application')
     institution_interested_in = models.CharField(max_length=255)
     admission_fee_of_the_program = models.DecimalField(max_digits=10, decimal_places=2)
     total_fee_of_the_program = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Total Fee Of Program '
@@ -137,9 +172,6 @@ class Application(models.Model):
     description_of_household = models.TextField()
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     personal_statement = models.TextField()
-    account_title = models.CharField(max_length=255, null=True, blank=True)
-    bank_account_number = models.CharField(max_length=20, null=True, blank=True)
-    bank_name = models.CharField(max_length=255, null=True, blank=True)
     degrees = models.ManyToManyField(Degree, related_name='degrees', blank=True)
     degree_document = models.FileField(upload_to='documents/', null=True, blank=True)
     transcript_document = models.FileField(upload_to='documents/', null=True, blank=True)
@@ -182,7 +214,7 @@ class Application(models.Model):
 class Interview(models.Model):
     application = models.OneToOneField('Application', on_delete=models.CASCADE)
     interviewer_name = models.CharField(max_length=255)
-    interview_date = models.DateField(null=True, blank=True)
+    interview_date = models.DateField(default=timezone.now(), null=True, blank=True)
     question_1 = models.TextField(verbose_name='Ask about student profile')
     question_2 = models.TextField(verbose_name='Ask student\'s family background and analyze financial circumstances')
     question_3 = models.TextField(
@@ -219,42 +251,26 @@ class Interview(models.Model):
 
 
 class SelectDonor(models.Model):
-    application = models.ForeignKey(Application, on_delete=models.CASCADE)
-    donor = models.ForeignKey(Donor, on_delete=models.CASCADE, null=True, blank=True)
-    selection_date = models.DateTimeField(auto_now=True)
+    student = models.OneToOneField(Student, on_delete=models.CASCADE,related_name="selectDonor")
+    donor = models.ForeignKey(Donor, on_delete=models.CASCADE, null=True, blank=True,related_name="selectDonors")
+    selection_date = models.DateField(auto_now=True)
 
     class Meta:
         verbose_name_plural = '4:Select_Donor'
 
 
-class Student(models.Model):
-    GENDER_CHOICES = [
-        ('Male', 'Male'),
-        ('Female', 'Female'),
-        ('Other', 'Other'),
-    ]
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=False, unique=True)
-    application = models.ForeignKey(Application, on_delete=models.SET_NULL, null=True, blank=False)
-    student_name = models.CharField(max_length=255)
-    father_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
-    date_of_birth = models.DateField()
-    age = models.PositiveIntegerField()
-    country = models.CharField(max_length=255)
-    province = models.CharField(max_length=255)
-    city = models.CharField(max_length=255)
-    mobile_no = models.CharField(max_length=15)
-    email = models.EmailField()
-    village = models.CharField(max_length=255)
-    address = models.TextField()
+class Results(models.Model):
+    result = models.FileField(upload_to='results/', null=True, blank=True)
 
-    def __str__(self):
-        return f"{self.student_name}"
+    # def __str__(self):
+    #     return self.result
 
-    class Meta:
-        verbose_name = "Student"
-        verbose_name_plural = "Students"
+
+class Documents(models.Model):
+    documents = models.FileField(upload_to='otherDocuments/', null=True, blank=True)
+
+    # def __str__(self):
+    #     return self.documents
 
 
 class ProjectionSheet(models.Model):
@@ -263,7 +279,7 @@ class ProjectionSheet(models.Model):
         ('Unpaid', 'Unpaid'),
     ]
 
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="projections")
     semester = models.PositiveIntegerField()
     tuition_fee = models.DecimalField(max_digits=10, decimal_places=0)
     other_fee = models.DecimalField(max_digits=10, decimal_places=0)
@@ -273,6 +289,24 @@ class ProjectionSheet(models.Model):
     fee_due_date = models.DateField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Unpaid')
     payment_date = models.DateField(null=True, blank=True)
+    challan = models.FileField(upload_to='challans/', null=True, blank=True)
+    reciept = models.FileField(upload_to='reciepts/', null=True, blank=True)
+    results = models.ForeignKey(Results, on_delete=models.CASCADE, related_name="projection_results", null=True,
+                                blank=True)
+    other_documents = models.ForeignKey(Documents, on_delete=models.CASCADE, related_name="projections_other_documents",
+                                        null=True, blank=True)
+
+    def update_document(self, document_type, file):
+        if document_type == 'challan':
+            self.challan = file
+        elif document_type == 'reciept':
+            self.reciept = file
+        elif document_type == 'results':
+            results_instance = Results.objects.create(result=file)
+            self.results = results_instance
+        elif document_type == 'other_documents':
+            documents_instance = Documents.objects.create(documents=file)
+            self.other_documents = documents_instance
 
     def __str__(self):
         return f"Projection Sheet - {self.student.user.username} - Semester {self.semester}"
@@ -294,7 +328,7 @@ class Mentor(models.Model):
 class SelectMentor(models.Model):
     student = models.OneToOneField(Student, on_delete=models.CASCADE)
     mentor = models.ForeignKey(Mentor, on_delete=models.CASCADE, null=True, blank=True)
-    selection_date = models.DateTimeField(auto_now=True)
+    selection_date = models.DateField(auto_now=True)
 
     class Meta:
         verbose_name_plural = '6:Select_Mentor'
