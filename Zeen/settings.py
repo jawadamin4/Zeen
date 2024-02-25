@@ -72,10 +72,11 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000", "http://localhost:5174","https://zeenfrontend-production.up.railway.app",
-                                                     "http://localhost:5173"  # React development server
-    # Add other origins as needed
-]
+    "http://localhost:3000", "http://localhost:5174", "http://localhost:5173", "https://zeen-production.up.railway.app"
+
+] # React development server
+# Add other origins as needed
+CSRF_TRUSTED_ORIGINS = ['https://zeen-production.up.railway.app']
 ROOT_URLCONF = 'Zeen.urls'
 
 TEMPLATES = [
