@@ -11,6 +11,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import environ
+
+# initailize enviornment veriable
+env = environ.Env()
+
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,11 +26,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-!c_g5g!5!z8_r0=919kw-l1kzzq_8-a5elno^cl!(h)x17a_%$'
-
+# SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['zeen-production.up.railway.app','127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -54,7 +60,8 @@ REST_FRAMEWORK = {
 }
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',  # Make sure this line is present before AuthenticationMiddleware
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    # Make sure this line is present before AuthenticationMiddleware
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -63,12 +70,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000", "http://localhost:5174", "http://localhost:5173", "https://zeen-production.up.railway.app"
 
-] # React development server
-# Add other origins as needed
-CSRF_TRUSTED_ORIGINS = ['https://zeen-production.up.railway.app']
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000", "http://localhost:5174","https://zeenfrontend-production.up.railway.app",
+                                                     "http://localhost:5173"  # React development server
+    # Add other origins as needed
+]
 ROOT_URLCONF = 'Zeen.urls'
 
 TEMPLATES = [
@@ -99,7 +106,7 @@ EMAIL_HOST_PASSWORD = 'yvno rpkv hdjy tgiz'  # Replace with your email password
 JAZZMIN_SETTINGS = {
     "site_brand": "ZEEN",
     # "site_logo": "books/img/logo.png",
-    "welcome_sign": "Welcome to the Zeen Education Sponsorship project Admin",
+    "welcome_sign": "Welcome to the Zeen Education scholarship project Admin",
     "usermenu_links": [
         {"name": "Logout", "url": "admin:logout", "new_window": False},
         {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
@@ -109,13 +116,18 @@ JAZZMIN_SETTINGS = {
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+# postgress database
+import dj_database_url
 
+DATABASES = {
+    'default': dj_database_url.parse('postgresql://postgres:3B4F*Cg35DDeadGAe6BC245aaG11cf46@viaduct.proxy.rlwy.net:33049/railway')
+}
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -170,4 +182,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 SECURE_REFERRER_POLICY = "same-origin"
