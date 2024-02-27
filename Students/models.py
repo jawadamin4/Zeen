@@ -199,7 +199,7 @@ class Application(models.Model):
 
     def calculate_total_amount(self):
         # Your calculation logic here
-        self.total_amount = self.admission_fee_of_the_program + self.total_fee_of_the_program + self.account_expenses + self.living_expenses + self.transport_amount + self.food_and_necessities_expenses + self.other_amount
+        self.total_amount = self.admission_fee_of_the_program + self.total_fee_of_the_program + self.living_expenses + self.transport_amount + self.food_and_necessities_expenses + self.other_amount
 
     def clean(self):
         if self.age <= 0:
