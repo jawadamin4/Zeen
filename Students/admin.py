@@ -77,7 +77,7 @@ class ApplicationAdmin(admin.ModelAdmin):
 
         ('Financial Information', {
             'fields': (
-                'admission_fee_of_the_program', 'total_fee_of_the_program', 'account_expenses', 'living_expenses',
+                'admission_fee_of_the_program', 'total_fee_of_the_program', 'living_expenses',
                 'food_and_necessities_expenses', 'transport_amount', 'other_amount'),
         }),
         ('Household Information', {

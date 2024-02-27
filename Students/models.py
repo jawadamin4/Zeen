@@ -134,6 +134,8 @@ class Application(models.Model):
         ('Khyber Pakhtunkhwa', 'Khyber Pakhtunkhwa'),
         ('Balochistan', 'Balochistan'),
         ('Gilgit-Baltistan', 'Gilgit-Baltistan'),
+        ('Islamabad', 'Islamabad'),
+        ('Kashmir', 'Kashmir'),
     ]
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='applications')
     name = models.CharField(max_length=255)
@@ -148,7 +150,7 @@ class Application(models.Model):
     mobile_no = models.CharField(max_length=15)
     cnic_or_b_form = models.CharField(max_length=13)
     email = models.EmailField()
-    village = models.CharField(max_length=255)
+    village = models.CharField(max_length=255,blank=True,null=True)
     address = models.TextField()
     current_level_of_education = models.CharField(max_length=255, choices=LEVEL_CHOICES)
     program_interested_in = models.ForeignKey(Program, on_delete=models.CASCADE, blank=True, null=True,
@@ -157,9 +159,8 @@ class Application(models.Model):
     admission_fee_of_the_program = models.DecimalField(max_digits=10, decimal_places=2)
     total_fee_of_the_program = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Total Fee Of Program '
                                                                                                  '(per month)')
-    account_expenses = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Account Expenses   '
-                                                                                         '(per month)')
-    living_expenses = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Account Expenses   '
+
+    living_expenses = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='living Expenses   '
                                                                                         '(per month)')
     food_and_necessities_expenses = models.DecimalField(max_digits=10, decimal_places=2,
                                                         verbose_name='Food & Necessities expenses (per month)')

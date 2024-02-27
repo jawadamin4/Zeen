@@ -65,7 +65,7 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
         fields = ['name', 'father_name', 'last_name', 'gender', 'date_of_birth', 'province', 'city', 'mobile_no',
                   'cnic_or_b_form', 'email', 'village', 'address', 'current_level_of_education',
                   'institution_interested_in', 'admission_fee_of_the_program', 'total_fee_of_the_program',
-                  'account_expenses', 'living_expenses', 'food_and_necessities_expenses', 'transport_amount',
+                  'living_expenses', 'food_and_necessities_expenses', 'transport_amount',
                   'other_amount', 'total_members_of_household', 'members_earning', 'income_per_month',
                   'expense_per_month', 'description_of_household', 'personal_statement', 'total_amount',
                   'program_interested_in', 'degree_document',
@@ -86,7 +86,7 @@ class ApplicationCreateByAdminSerializer(serializers.ModelSerializer):
                   'mobile_no',
                   'cnic_or_b_form', 'email', 'village', 'address', 'current_level_of_education',
                   'institution_interested_in', 'admission_fee_of_the_program', 'total_fee_of_the_program',
-                  'account_expenses', 'living_expenses', 'food_and_necessities_expenses', 'transport_amount',
+                  'living_expenses', 'food_and_necessities_expenses', 'transport_amount',
                   'other_amount', 'total_members_of_household', 'members_earning', 'income_per_month',
                   'expense_per_month', 'description_of_household', 'personal_statement', 'total_amount',
                   'program_interested_in', 'degree_document',
@@ -110,7 +110,7 @@ class ApplicationUpdateByAdminSerializer(serializers.ModelSerializer):
                   'mobile_no',
                   'cnic_or_b_form', 'email', 'village', 'address', 'current_level_of_education',
                   'institution_interested_in', 'admission_fee_of_the_program', 'total_fee_of_the_program',
-                  'account_expenses', 'living_expenses', 'food_and_necessities_expenses', 'transport_amount',
+                  'living_expenses', 'food_and_necessities_expenses', 'transport_amount',
                   'other_amount', 'total_members_of_household', 'members_earning', 'income_per_month',
                   'expense_per_month', 'description_of_household', 'personal_statement', 'total_amount',
                   'program_interested_in', 'degree_document',
@@ -140,7 +140,7 @@ class ApplicationUpdateByAdminSerializer(serializers.ModelSerializer):
                                                                    instance.admission_fee_of_the_program)
         instance.total_fee_of_the_program = validated_data.get('total_fee_of_the_program',
                                                                instance.total_fee_of_the_program)
-        instance.account_expenses = validated_data.get('account_expenses', instance.account_expenses)
+        # instance.account_expenses = validated_data.get('account_expenses', instance.account_expenses)
         instance.living_expenses = validated_data.get('living_expenses', instance.living_expenses)
         instance.food_and_necessities_expenses = validated_data.get('food_and_necessities_expenses',
                                                                     instance.food_and_necessities_expenses)
