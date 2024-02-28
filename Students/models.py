@@ -2,6 +2,7 @@ from datetime import date
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.utils import timezone
 
@@ -23,7 +24,7 @@ class Donor(models.Model):
     donor_username = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     donor_name = models.CharField(max_length=30)
     donor_cnic = models.CharField(max_length=13)
-    donor_contact = models.IntegerField()
+    donor_contact = models.IntegerField(validators=[MaxValueValidator(999999999999)])
     donor_email = models.EmailField()
     donor_country = models.CharField(max_length=30)
 
@@ -199,8 +200,14 @@ class Application(models.Model):
 
     def calculate_total_amount(self):
         # Your calculation logic here
-        self.total_amount = self.admission_fee_of_the_program + self.total_fee_of_the_program + self.living_expenses + self.transport_amount + self.food_and_necessities_expenses + self.other_amount
-
+        self.total_amount = (
+                self.admission_fee_of_the_program +
+                self.total_fee_of_the_program +
+                self.living_expenses +
+                self.transport_amount +
+                self.food_and_necessities_expenses +
+                self.other_amount
+        )
     def clean(self):
         if self.age <= 0:
             raise ValidationError("Age must be a positive integer.")
@@ -215,7 +222,7 @@ class Application(models.Model):
 class Interview(models.Model):
     application = models.OneToOneField('Application', on_delete=models.CASCADE)
     interviewer_name = models.CharField(max_length=255)
-    interview_date = models.DateField(default=timezone.now(), null=True, blank=True)
+    interview_date = models.DateField(null=True, blank=True)
     question_1 = models.TextField(verbose_name='Ask about student profile')
     question_2 = models.TextField(verbose_name='Ask student\'s family background and analyze financial circumstances')
     question_3 = models.TextField(
@@ -317,7 +324,7 @@ class Mentor(models.Model):
     mentor_username = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     mentor_name = models.CharField(max_length=30)
     mentor_cnic = models.CharField(max_length=13)
-    mentor_contact = models.IntegerField()
+    mentor_contact = models.IntegerField(validators=[MaxValueValidator(999999999999)])
     mentor_email = models.EmailField()
     mentor_Expertise = models.CharField(max_length=30)
     mentor_country = models.CharField(max_length=30)

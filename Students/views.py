@@ -986,7 +986,7 @@ class DonorCreateAPIView(APIView):
             except IntegrityError as e:
                 # If a UNIQUE constraint violation occurs on the username field
                 return Response({"error": "Username already exists"}, status=status.HTTP_400_BAD_REQUEST)
-
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
