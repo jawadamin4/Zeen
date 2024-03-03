@@ -15,7 +15,7 @@ from .views import projections_view
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     list_display = (
-                    'student_name','father_name', 'last_name', 'gender', 'view_projections_button')
+        'student_name', 'father_name', 'last_name', 'gender', 'view_projections_button')
     readonly_fields = ['user']
 
     # actions = ['view_projections']
@@ -57,7 +57,9 @@ class VerificationInline(admin.TabularInline):
     model = Verification
     extra = 1
 
+
 admin.site.register(BankDetails)
+
 
 class ApplicationAdmin(admin.ModelAdmin):
     inlines = [DegreeInline]
@@ -66,7 +68,7 @@ class ApplicationAdmin(admin.ModelAdmin):
             'fields': ('status', 'verification_required'),
         }),
         ('Personal Information', {
-            'fields': ('student','name', 'father_name', 'last_name', 'date_of_birth', 'age', 'gender'),
+            'fields': ('student', 'name', 'father_name', 'last_name', 'date_of_birth', 'age', 'gender'),
         }),
         ('Contact Information', {
             'fields': ('mobile_no', 'cnic_or_b_form', 'email', 'country', 'province', 'city', 'village', 'address'),
@@ -97,7 +99,7 @@ class ApplicationAdmin(admin.ModelAdmin):
     list_display = ['name', 'status']
     list_filter = ('status',)
     search_fields = ('name', 'status')
-    readonly_fields = ['age','country', 'total_amount']
+    readonly_fields = ['age', 'country', 'total_amount']
 
 
 # Register your models and admin classes
@@ -127,6 +129,7 @@ class InterviewAdmin(admin.ModelAdmin):
                 'question_9',
                 'question_10',
                 'question_11',
+                'question_12',
             ],
         }),
         ('Other Information', {
@@ -141,9 +144,11 @@ admin.site.register(Documents)
 
 
 class ProjectionSheetAdmin(ImportExportModelAdmin):
-    list_display = ['student', 'semester', 'tuition_fee', 'other_fee', 'total_cost', 'sponsor_name',
-                    'sponsorship_commitment', 'fee_due_date', 'status', 'payment_date',"challan","reciept"]
-    list_filter = ['status', 'sponsorship_commitment']
+    list_display = ['student', 'semester', 'tuition_fee', 'other_fee', 'total_cost', 'sponsor_name1',
+                    'sponsor_commitment1', 'sponsor_percent1', 'sponsor_name2',
+                    'sponsor_commitment2', 'sponsor_percent2', 'fee_due_date', 'status', 'payment_date', "challan",
+                    "reciept"]
+    list_filter = ['status', 'sponsor_commitment1']
 
     # def view_projection_sheet(self, obj):
     #     # Assuming you have an Application FK in ForecastEntry
