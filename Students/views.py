@@ -382,6 +382,11 @@ class UpdateDeleteApplicationsByAdminAPIView(APIView):
             instance.profile_picture.save(profile_picture.name, profile_picture)
 
         data = request.data.copy()
+        # Convert 'null' strings to None for numeric fields
+        numeric_fields = ['living_expenses', 'food_and_necessities_expenses', 'transport_amount', 'other_amount']
+        for field in numeric_fields:
+            if data.get(field) == 'null':
+                data[field] = None
         del data['degree_document']
         del data['transcript_document']
         del data['income_statement_document']

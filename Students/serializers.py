@@ -124,6 +124,14 @@ class ApplicationUpdateByAdminSerializer(serializers.ModelSerializer):
                   'program_interested_in', 'degree_document',
                   'transcript_document', 'income_statement_document', 'profile_picture', 'degree', 'status',
                   'verification_required']
+        # Specify required attribute for each field
+        extra_kwargs = {
+            'village': {'required': False},
+            'living_expenses': {'required': False},
+            'food_and_necessities_expenses': {'required': False},
+            'transport_amount': {'required': False},
+            'other_amount': {'required': False},
+        }
 
     def update(self, instance, validated_data):
         # Update the instance fields
