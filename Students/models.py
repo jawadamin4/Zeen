@@ -24,7 +24,7 @@ class Donor(models.Model):
     donor_username = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     donor_name = models.CharField(max_length=30)
     donor_cnic = models.CharField(max_length=13)
-    donor_contact = models.IntegerField(validators=[MaxValueValidator(999999999999)])
+    donor_contact = models.CharField(max_length=13)
     donor_email = models.EmailField()
     donor_country = models.CharField(max_length=30)
 
@@ -35,7 +35,8 @@ class Donor(models.Model):
 
 
 class Verification(models.Model):
-    application = models.OneToOneField('Application', on_delete=models.CASCADE, unique=True,related_name='verification')
+    application = models.OneToOneField('Application', on_delete=models.CASCADE, unique=True,
+                                       related_name='verification')
     verifier_name = models.CharField(max_length=255)
     verifier_email = models.EmailField()
     verifier_contact = models.CharField(max_length=15)
@@ -99,7 +100,7 @@ class Student(models.Model):
 
 
 class BankDetails(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, blank=False,related_name='bankdetails')
+    student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True, blank=False, related_name='bankdetails')
     account_title = models.CharField(max_length=255, null=True, blank=True)
     IBAN_number = models.CharField(max_length=20, null=True, blank=True)
     bank_name = models.CharField(max_length=255, null=True, blank=True)
@@ -108,6 +109,7 @@ class BankDetails(models.Model):
 
     def __str__(self):
         return f"{self.account_title}"
+
 
 class Application(models.Model):
     GENDER_CHOICES = [
@@ -151,7 +153,7 @@ class Application(models.Model):
     mobile_no = models.CharField(max_length=15)
     cnic_or_b_form = models.CharField(max_length=13)
     email = models.EmailField()
-    village = models.CharField(max_length=255,blank=True,null=True)
+    village = models.CharField(max_length=255, blank=True, null=True)
     address = models.TextField()
     current_level_of_education = models.CharField(max_length=255, choices=LEVEL_CHOICES)
     program_interested_in = models.ForeignKey(Program, on_delete=models.CASCADE, blank=True, null=True,
@@ -162,11 +164,13 @@ class Application(models.Model):
                                                                                                  '(per month)')
 
     living_expenses = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='living Expenses   '
-                                                                                        '(per month)')
+                                                                                        '(per month)', null=True,
+                                          blank=True)
     food_and_necessities_expenses = models.DecimalField(max_digits=10, decimal_places=2,
-                                                        verbose_name='Food & Necessities expenses (per month)')
-    transport_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    other_amount = models.DecimalField(max_digits=10, decimal_places=2)
+                                                        verbose_name='Food & Necessities expenses (per month)',
+                                                        null=True, blank=True)
+    transport_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    other_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     total_members_of_household = models.IntegerField()
     members_earning = models.IntegerField()
     income_per_month = models.DecimalField(max_digits=10, decimal_places=2)
@@ -199,15 +203,29 @@ class Application(models.Model):
         self.age = age
 
     def calculate_total_amount(self):
-        # Your calculation logic here
-        self.total_amount = (
+        total_amount = (
                 self.admission_fee_of_the_program +
-                self.total_fee_of_the_program +
-                self.living_expenses +
-                self.transport_amount +
-                self.food_and_necessities_expenses +
-                self.other_amount
+                self.total_fee_of_the_program
         )
+
+        # Check if living_expenses is available
+        if self.living_expenses is not None:
+            total_amount += self.living_expenses
+
+        # Check if transport_amount is available
+        if self.transport_amount is not None:
+            total_amount += self.transport_amount
+
+        # Check if food_and_necessities_expenses is available
+        if self.food_and_necessities_expenses is not None:
+            total_amount += self.food_and_necessities_expenses
+
+        # Check if other_amount is available
+        if self.other_amount is not None:
+            total_amount += self.other_amount
+
+        self.total_amount = total_amount
+
     def clean(self):
         if self.age <= 0:
             raise ValidationError("Age must be a positive integer.")
@@ -242,6 +260,8 @@ class Interview(models.Model):
     question_11 = models.TextField(
         verbose_name='Assess all the above with the personal statement included in the application form and give '
                      'recommendations for the case')
+    question_12 = models.TextField(
+        verbose_name='Tell us about your involvement in volunteer work and extracurricular activities.')
     interviewer_recommendation = models.TextField()
     Accepted = models.CharField(max_length=15, choices=[('-', '-'), ('yes', 'yes'), ('no', 'no')],
                                 default='-')
@@ -259,8 +279,8 @@ class Interview(models.Model):
 
 
 class SelectDonor(models.Model):
-    student = models.OneToOneField(Student, on_delete=models.CASCADE,related_name="selectDonor")
-    donor = models.ForeignKey(Donor, on_delete=models.CASCADE, null=True, blank=True,related_name="selectDonors")
+    student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name="selectDonor")
+    donor = models.ForeignKey(Donor, on_delete=models.CASCADE, null=True, blank=True, related_name="selectDonors")
     selection_date = models.DateField(auto_now=True)
 
     class Meta:
@@ -291,9 +311,9 @@ class ProjectionSheet(models.Model):
     semester = models.PositiveIntegerField()
     tuition_fee = models.DecimalField(max_digits=10, decimal_places=0)
     other_fee = models.DecimalField(max_digits=10, decimal_places=0)
-    total_cost = models.DecimalField(max_digits=10, decimal_places=0)
-    sponsor_name = models.CharField(max_length=255)
-    sponsorship_commitment = models.DecimalField(max_digits=5, decimal_places=0)
+    total_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    # sponsor_name = models.CharField(max_length=255)
+    # sponsorship_commitment = models.DecimalField(max_digits=5, decimal_places=0)
     fee_due_date = models.DateField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Unpaid')
     payment_date = models.DateField(null=True, blank=True)
@@ -303,6 +323,13 @@ class ProjectionSheet(models.Model):
                                 blank=True)
     other_documents = models.ForeignKey(Documents, on_delete=models.CASCADE, related_name="projections_other_documents",
                                         null=True, blank=True)
+    comments = models.TextField(null=True, blank=True)
+    sponsor_name1 = models.CharField(max_length=255)
+    sponsor_commitment1 = models.DecimalField(max_digits=10, decimal_places=2)
+    sponsor_percent1 = models.DecimalField(max_digits=5, decimal_places=2)
+    sponsor_name2 = models.CharField(max_length=255, blank=True, null=True)
+    sponsor_commitment2 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    sponsor_percent2 = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
 
     def update_document(self, document_type, file):
         if document_type == 'challan':
@@ -324,7 +351,7 @@ class Mentor(models.Model):
     mentor_username = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     mentor_name = models.CharField(max_length=30)
     mentor_cnic = models.CharField(max_length=13)
-    mentor_contact = models.IntegerField(validators=[MaxValueValidator(999999999999)])
+    mentor_contact = models.CharField(max_length=13)
     mentor_email = models.EmailField()
     mentor_Expertise = models.CharField(max_length=30)
     mentor_country = models.CharField(max_length=30)

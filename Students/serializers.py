@@ -92,6 +92,14 @@ class ApplicationCreateByAdminSerializer(serializers.ModelSerializer):
                   'program_interested_in', 'degree_document',
                   'transcript_document', 'income_statement_document', 'profile_picture', 'degree', 'status',
                   'verification_required']
+        # Specify required attribute for each field
+        extra_kwargs = {
+            'village': {'required': False},
+            'living_expenses': {'required': False},
+            'food_and_necessities_expenses': {'required': False},
+            'transport_amount': {'required': False},
+            'other_amount': {'required': False},
+        }
 
 
 class ApplicationUpdateByAdminSerializer(serializers.ModelSerializer):
@@ -258,7 +266,7 @@ class InterviewSerializer(serializers.ModelSerializer):
         model = Interview
         fields = ['application', 'interviewer_name', 'interview_date', 'question_1',
                   'question_2', 'question_3', 'question_4', 'question_5', 'question_6',
-                  'question_7', 'question_8', 'question_9', 'question_10', 'question_11',
+                  'question_7', 'question_8', 'question_9', 'question_10', 'question_11', 'question_12',
                   'interviewer_recommendation', 'Accepted']
 
 
