@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
+    'cloudinary',
     'import_export',
     'rest_framework',
     'rest_framework.authtoken',
@@ -179,6 +181,13 @@ MEDIA_URL = '/media/'
 
 # Define the path to the directory containing media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': "dgltrpd36",
+    'API_KEY': "823746485232944",
+    'API_SECRET': "Oo5Gd8cKSc2SSFMAjMF7y-Yo4Pw"
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
