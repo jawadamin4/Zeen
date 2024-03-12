@@ -351,8 +351,8 @@ class ProjectionSheetSerializers(serializers.ModelSerializer):
 
 class ProjectionSheetSerializerss(serializers.ModelSerializer):
     payment_date = serializers.DateField(required=False)
-    results = serializers.FileField(required=False)
-    other_documents = serializers.FileField(required=False)
+    results = ResultSerializer(required=False)
+    other_documents = OtherDocumentSerializer(required=False)
 
     class Meta:
         model = ProjectionSheet

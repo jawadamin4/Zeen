@@ -878,6 +878,37 @@ class ProjectionSheetDetailView(RetrieveUpdateAPIView):
     lookup_url_kwarg = 'projection_id'
     lookup_field = 'id'
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        # Print request data for debugging
+        print("Request FILES:", request.FILES)
+
+        # Handle file uploads for results
+        results_file = request.FILES.get('results')
+        if results_file:
+            results_instance = instance.results
+            if results_instance:
+                results_instance.result = results_file
+                results_instance.save()
+            else:
+                results_instance = Results.objects.create(result=results_file)
+                instance.results = results_instance
+
+        # Handle file uploads for other_documents
+        other_documents_file = request.FILES.get('other_documents')
+        if other_documents_file:
+            other_documents_instance = instance.other_documents
+            if other_documents_instance:
+                other_documents_instance.documents = other_documents_file
+                other_documents_instance.save()
+            else:
+                other_documents_instance = Documents.objects.create(documents=other_documents_file)
+                instance.other_documents = other_documents_instance
+
+        return super().update(request, *args, **kwargs)
+
+
 
 class ProjectionSheetDeleteView(DestroyAPIView):
     queryset = ProjectionSheet.objects.all()
